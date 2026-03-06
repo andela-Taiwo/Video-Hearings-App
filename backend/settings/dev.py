@@ -3,7 +3,8 @@ from settings.base import *
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost', '127.0.0.1',
+    "localhost",
+    "127.0.0.1",
 ]
 
 INTERNAL_IPS = [
@@ -17,4 +18,4 @@ INTERNAL_IPS = [
 #     'debug_toolbar',
 # ]
 
-ADMINS = (('@memunat', 'thepanache27@gmail.com'), )
+ADMINS = (("@memunat", "thepanache27@gmail.com"),)

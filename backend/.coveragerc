@@ -1,0 +1,41 @@
+# .coveragerc
+[run]
+branch = True
+source = 
+    backend
+    courts
+    accounts
+    video_hearings
+
+omit =
+    */tests/*
+    */migrations/*
+    manage.py
+    setup.py
+    */__init__.py
+    .tox/*
+    media/*
+    static/*
+    templates/*
+    staticfiles/*
+
+[report]
+# Temporarily set low threshold until you write tests
+fail_under = 0
+precision = 2
+
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @overload
+
+show_missing = True
+skip_covered = True
+
+[html]
+directory = htmlcov

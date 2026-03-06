@@ -15,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options["clear"]:
             self.stdout.write("Clearing existing data...")
-            # Add clearing logic here if needed
+            # [TODO]Add clearing logic here if needed
 
         run()
         self.stdout.write(self.style.SUCCESS("Successfully seeded database"))

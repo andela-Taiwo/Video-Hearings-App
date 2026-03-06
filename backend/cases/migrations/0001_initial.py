@@ -7,7 +7,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -16,56 +15,145 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Case',
+            name="Case",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('case_number', models.CharField(db_index=True, max_length=50, unique=True)),
-                ('title', models.CharField(max_length=300)),
-                ('description', models.CharField(blank=True, max_length=300, null=True)),
-                ('case_type', models.CharField(db_index=True, max_length=50)),
-                ('status', models.CharField(choices=[('open', 'Open'), ('closed', 'Closed'), ('appealed', 'Appealed'), ('stayed', 'Stayed')], db_index=True, default='open', max_length=20)),
-                ('filed_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('judge', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='presiding_cases', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "case_number",
+                    models.CharField(db_index=True, max_length=50, unique=True),
+                ),
+                ("title", models.CharField(max_length=300)),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=300, null=True),
+                ),
+                ("case_type", models.CharField(db_index=True, max_length=50)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("open", "Open"),
+                            ("closed", "Closed"),
+                            ("appealed", "Appealed"),
+                            ("stayed", "Stayed"),
+                        ],
+                        db_index=True,
+                        default="open",
+                        max_length=20,
+                    ),
+                ),
+                ("filed_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "judge",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="presiding_cases",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_at'],
+                "ordering": ["-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='CaseParty',
+            name="CaseParty",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('party_role', models.CharField(choices=[('defendant', 'Defendant'), ('prosecutor', 'Prosecutor'), ('claimant', 'Claimant'), ('respondent', 'Respondent'), ('defence_counsel', 'Defence Counsel'), ('prosecution_counsel', 'Prosecution Counsel'), ('claimant_counsel', 'Claimant Counsel'), ('solicitor', 'Solicitor'), ('judge', 'Judge'), ('magistrate', 'Magistrate'), ('clerk', 'Court Clerk'), ('usher', 'Court Usher'), ('juror', 'Juror'), ('witness', 'Witness'), ('interpreter', 'Interpreter'), ('other', 'Other')], db_index=True, max_length=50)),
-                ('added_at', models.DateTimeField(auto_now_add=True)),
-                ('case', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cases.case')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "party_role",
+                    models.CharField(
+                        choices=[
+                            ("defendant", "Defendant"),
+                            ("prosecutor", "Prosecutor"),
+                            ("claimant", "Claimant"),
+                            ("respondent", "Respondent"),
+                            ("defence_counsel", "Defence Counsel"),
+                            ("prosecution_counsel", "Prosecution Counsel"),
+                            ("claimant_counsel", "Claimant Counsel"),
+                            ("solicitor", "Solicitor"),
+                            ("judge", "Judge"),
+                            ("magistrate", "Magistrate"),
+                            ("clerk", "Court Clerk"),
+                            ("usher", "Court Usher"),
+                            ("juror", "Juror"),
+                            ("witness", "Witness"),
+                            ("interpreter", "Interpreter"),
+                            ("other", "Other"),
+                        ],
+                        db_index=True,
+                        max_length=50,
+                    ),
+                ),
+                ("added_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "case",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="cases.case"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='case',
-            name='parties',
-            field=models.ManyToManyField(related_name='cases', through='cases.CaseParty', to=settings.AUTH_USER_MODEL),
+            model_name="case",
+            name="parties",
+            field=models.ManyToManyField(
+                related_name="cases",
+                through="cases.CaseParty",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddIndex(
-            model_name='caseparty',
-            index=models.Index(fields=['case', 'party_role'], name='cases_casep_case_id_f4efaf_idx'),
+            model_name="caseparty",
+            index=models.Index(
+                fields=["case", "party_role"], name="cases_casep_case_id_f4efaf_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='caseparty',
-            index=models.Index(fields=['user', 'party_role'], name='cases_casep_user_id_a336e2_idx'),
+            model_name="caseparty",
+            index=models.Index(
+                fields=["user", "party_role"], name="cases_casep_user_id_a336e2_idx"
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='caseparty',
-            unique_together={('case', 'user', 'party_role')},
+            name="caseparty",
+            unique_together={("case", "user", "party_role")},
         ),
         migrations.AddIndex(
-            model_name='case',
-            index=models.Index(fields=['case_number', 'status'], name='cases_case_case_nu_25f044_idx'),
+            model_name="case",
+            index=models.Index(
+                fields=["case_number", "status"], name="cases_case_case_nu_25f044_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='case',
-            index=models.Index(fields=['judge', 'status'], name='cases_case_judge_i_fc91dd_idx'),
+            model_name="case",
+            index=models.Index(
+                fields=["judge", "status"], name="cases_case_judge_i_fc91dd_idx"
+            ),
         ),
     ]

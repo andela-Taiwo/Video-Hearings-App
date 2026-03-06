@@ -46,7 +46,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 20,
+    "PAGE_SIZE": 100,
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.SearchFilter",
@@ -60,7 +60,9 @@ REST_FRAMEWORK = {
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY',  "django-insecure-()*=sc6)5#$l1uw@q8ipe6+sqhsli5k=4$-(w4jn6!a*9e8c6q")
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "django-insecure-()*=sc6)5#$l1uw@q8ipe6+sqhsli5k=4$-(w4jn6!a*9e8c6q"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

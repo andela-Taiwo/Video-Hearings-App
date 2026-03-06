@@ -10,90 +10,217 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
-        ('courts', '0001_initial'),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("courts", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('first_name', models.CharField(blank=True, max_length=100)),
-                ('last_name', models.CharField(blank=True, max_length=100)),
-                ('email', models.EmailField(db_index=True, max_length=254, unique=True, validators=[django.core.validators.EmailValidator()])),
-                ('is_verified', models.BooleanField(default=False)),
-                ('is_email_verified', models.BooleanField(default=False)),
-                ('is_admin_approved', models.BooleanField(default=False)),
-                ('is_active', models.BooleanField(default=False)),
-                ('verification_token', models.CharField(blank=True, max_length=255, null=True)),
-                ('verification_token_created', models.DateTimeField(blank=True, null=True)),
-                ('phone_number', models.CharField(blank=True, max_length=20, validators=[django.core.validators.RegexValidator(message='Phone number must be in international format', regex='^\\+?1?\\d{9,15}$')])),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('last_activity', models.DateTimeField(blank=True, null=True)),
-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="last login"
+                    ),
+                ),
+                (
+                    "is_superuser",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        verbose_name="superuser status",
+                    ),
+                ),
+                ("first_name", models.CharField(blank=True, max_length=100)),
+                ("last_name", models.CharField(blank=True, max_length=100)),
+                (
+                    "email",
+                    models.EmailField(
+                        db_index=True,
+                        max_length=254,
+                        unique=True,
+                        validators=[django.core.validators.EmailValidator()],
+                    ),
+                ),
+                ("is_verified", models.BooleanField(default=False)),
+                ("is_email_verified", models.BooleanField(default=False)),
+                ("is_admin_approved", models.BooleanField(default=False)),
+                ("is_active", models.BooleanField(default=False)),
+                (
+                    "verification_token",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "verification_token_created",
+                    models.DateTimeField(blank=True, null=True),
+                ),
+                (
+                    "phone_number",
+                    models.CharField(
+                        blank=True,
+                        max_length=20,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                message="Phone number must be in international format",
+                                regex="^\\+?1?\\d{9,15}$",
+                            )
+                        ],
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("last_activity", models.DateTimeField(blank=True, null=True)),
+                (
+                    "is_staff",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates whether the user can log into this admin site.",
+                        verbose_name="staff status",
+                    ),
+                ),
+                (
+                    "date_joined",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="date joined"
+                    ),
+                ),
+                (
+                    "groups",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.group",
+                        verbose_name="groups",
+                    ),
+                ),
+                (
+                    "user_permissions",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="Specific permissions for this user.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.permission",
+                        verbose_name="user permissions",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'User',
-                'verbose_name_plural': 'Users',
+                "verbose_name": "User",
+                "verbose_name_plural": "Users",
             },
             managers=[
-                ('objects', accounts.models.UserManager()),
+                ("objects", accounts.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
-            name='UserProfile',
+            name="UserProfile",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, related_name='profile', serialize=False, to=settings.AUTH_USER_MODEL)),
-                ('role', models.CharField(choices=[('judge', 'Judge'), ('lawyer', 'Lawyer'), ('clerk', 'Clerk'), ('defendant', 'Defendant'), ('witness', 'Witness'), ('prosecutor', 'Prosecutor'), ('public', 'Public'), ('admin', 'Administrator')], db_index=True, max_length=20)),
-                ('bar_number', models.CharField(blank=True, max_length=50)),
-                ('specialization', models.CharField(blank=True, max_length=100)),
-                ('profile_picture', models.ImageField(blank=True, null=True, upload_to='profile_pics/%Y/%m/%d/')),
-                ('bio', models.TextField(blank=True)),
-                ('office_address', models.TextField(blank=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('court', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='user_court', to='courts.court')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        related_name="profile",
+                        serialize=False,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "role",
+                    models.CharField(
+                        choices=[
+                            ("judge", "Judge"),
+                            ("lawyer", "Lawyer"),
+                            ("clerk", "Clerk"),
+                            ("defendant", "Defendant"),
+                            ("witness", "Witness"),
+                            ("prosecutor", "Prosecutor"),
+                            ("public", "Public"),
+                            ("admin", "Administrator"),
+                        ],
+                        db_index=True,
+                        max_length=20,
+                    ),
+                ),
+                ("bar_number", models.CharField(blank=True, max_length=50)),
+                ("specialization", models.CharField(blank=True, max_length=100)),
+                (
+                    "profile_picture",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="profile_pics/%Y/%m/%d/"
+                    ),
+                ),
+                ("bio", models.TextField(blank=True)),
+                ("office_address", models.TextField(blank=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "court",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="user_court",
+                        to="courts.court",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'User Profile',
-                'verbose_name_plural': 'User Profiles',
+                "verbose_name": "User Profile",
+                "verbose_name_plural": "User Profiles",
             },
         ),
         migrations.AddIndex(
-            model_name='user',
-            index=models.Index(fields=['email', 'is_verified'], name='accounts_us_email_0636d3_idx'),
+            model_name="user",
+            index=models.Index(
+                fields=["email", "is_verified"], name="accounts_us_email_0636d3_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='user',
-            index=models.Index(fields=['is_admin_approved', 'is_email_verified'], name='accounts_us_is_admi_b5203f_idx'),
+            model_name="user",
+            index=models.Index(
+                fields=["is_admin_approved", "is_email_verified"],
+                name="accounts_us_is_admi_b5203f_idx",
+            ),
         ),
         migrations.AddIndex(
-            model_name='userprofile',
-            index=models.Index(fields=['user', 'role'], name='accounts_us_user_id_629daf_idx'),
+            model_name="userprofile",
+            index=models.Index(
+                fields=["user", "role"], name="accounts_us_user_id_629daf_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='userprofile',
-            index=models.Index(fields=['bar_number'], name='accounts_us_bar_num_77e0fb_idx'),
+            model_name="userprofile",
+            index=models.Index(
+                fields=["bar_number"], name="accounts_us_bar_num_77e0fb_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='userprofile',
-            index=models.Index(fields=['court_id'], name='accounts_us_court_i_4ddd09_idx'),
+            model_name="userprofile",
+            index=models.Index(
+                fields=["court_id"], name="accounts_us_court_i_4ddd09_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='userprofile',
-            index=models.Index(fields=['role'], name='accounts_us_role_e16858_idx'),
+            model_name="userprofile",
+            index=models.Index(fields=["role"], name="accounts_us_role_e16858_idx"),
         ),
     ]
