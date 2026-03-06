@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import hearings
 
 router = DefaultRouter()
-router.register(r"", hearings.HearingViewSet, basename="hearing")
+router.register(r"", hearings.HearingViewSet, basename="hearings")
 
 # router_v1 = DefaultRouter()
 # router_v1.register(r"hearings", hearings.HearingViewSet, basename="hearing_v1")
