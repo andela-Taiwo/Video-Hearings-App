@@ -21,7 +21,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Custom User Model
-# AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "accounts.User"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

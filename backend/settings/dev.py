@@ -13,8 +13,8 @@ INTERNAL_IPS = [
 ]
 
 
-INSTALLED_APPS += [
-    'debug_toolbar',
-]
+# INSTALLED_APPS += [
+#     'debug_toolbar',
+# ]
 
 ADMINS = (('@memunat', 'thepanache27@gmail.com'), )
