@@ -89,19 +89,19 @@ services:
       - app-network
 
   # Optional: Redis Commander for Redis management UI (useful for development)
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    container_name: test-redis-commander
-    environment:
-      - REDIS_HOSTS=local:${REDIS_HOST}:${REDIS_PORT:-6379}
-    ports:
-      - "${REDIS_COMMANDER_PORT:-8081}:8081"
-    depends_on:
-      redis:
-        condition: service_healthy
-    restart: unless-stopped
-    networks:
-      - app-network
+  # redis-commander:
+  #   image: rediscommander/redis-commander:latest
+  #   container_name: test-redis-commander
+  #   environment:
+  #     - REDIS_HOSTS=local:${REDIS_HOST}:${REDIS_PORT:-6379}
+  #   ports:
+  #     - "${REDIS_COMMANDER_PORT:-8081}:8081"
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+  #   networks:
+  #     - app-network
 
 volumes:
   postgres_data:

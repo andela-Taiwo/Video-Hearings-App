@@ -15,8 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path, include
 from django.http import JsonResponse
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from django.views.generic import TemplateView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -36,9 +42,9 @@ def health_check(request):
 urlpatterns = [
     path("health/", health_check, name="health_check"),
     path('admin/', admin.site.urls),
-    path("api/v1/hearings/", include("video_hearings.urls")),
-    path("api/v1/courts/", include("courts.urls")),
-    path("api/v1/", include("cases.urls")),
+    # path("api/v1/hearings/", include("video_hearings.urls")),
+    # path("api/v1/courts/", include("courts.urls")),
+    # path("api/v1/cases/", include("cases.urls")),
     path("", TemplateView.as_view(template_name="index.html"), name="home"),
     path(
         "swagger/",
