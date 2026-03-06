@@ -1,0 +1,16 @@
+backend/.venv
+backend/.env
+backend/logs
+
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+build/
+dist/
+backend/wheels/
+*.egg-info
+backend/staticfiles/
+/logs
+backend/media

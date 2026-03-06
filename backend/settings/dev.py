@@ -1,0 +1,20 @@
+from settings.base import *
+
+DEBUG = True
+
+ALLOWED_HOSTS = [
+    'localhost', '127.0.0.1',
+]
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
+
+
+# INSTALLED_APPS += [
+#     'debug_toolbar',
+# ]
+
+ADMINS = (('@memunat', 'thepanache27@gmail.com'), )
