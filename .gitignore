@@ -20,3 +20,4 @@ build/
 dist/
 media/
 .env
+backend/.coverage

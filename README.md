@@ -282,6 +282,7 @@ The chosen stack prioritizes correctness and maintainability over extreme perfor
 - Python 3.12+ 
 - Docker
 - pip or uv package manager
+- Node v22 +
 
 ## 🚀 Quick Start
 
@@ -351,8 +352,14 @@ docker-compose down
 
 # Stop and remove volumes (clears database)
 docker-compose down -v
-```
 
+```
+#### Test Super Admin User
+```bash
+Test SuperAdmin:
+   - email="admin@courts.gov.uk"
+   - password="admin123"
+```
 
 ## 🔧 Configuration
 
@@ -457,8 +464,4 @@ These are the core features that are yet to be implemented
 - mail Notification
 - Authentication and Authorization
 - Pagination for the frontend
-
-
-
-**Note**: This application requires an active Groq API key. Make sure to keep your API keys secure and never commit them to version control.
 
