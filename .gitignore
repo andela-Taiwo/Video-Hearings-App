@@ -1,0 +1,12 @@
+backend/.venv
+backend/.env
+backend/logs
+backend/__pycache__/
+backend/*.py[oc]
+build/
+dist/
+backend/wheels/
+backend/*.egg-info
+backend/staticfiles/
+/logs
+backend/media
