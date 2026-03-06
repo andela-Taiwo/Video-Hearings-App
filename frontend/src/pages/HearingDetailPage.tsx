@@ -1,5 +1,3 @@
-// src/pages/HearingDetailPage.tsx
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -88,7 +86,7 @@ export const HearingDetailPage: React.FC = () => {
   if (loading && !selectedHearing) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600" role="status"   />
       </div>
     );
   }
@@ -432,3 +430,5 @@ export const HearingDetailPage: React.FC = () => {
     </div>
   );
 };
+
+

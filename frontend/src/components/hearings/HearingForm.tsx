@@ -1,4 +1,3 @@
-// src/components/hearings/HearingForm.tsx
 
 import React, { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';

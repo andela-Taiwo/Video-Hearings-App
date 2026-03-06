@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect,  useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HearingList } from '../components/hearings/HearingList.tsx';
 import { HearingForm } from '../components/hearings/HearingForm.tsx';
 import { HearingFilters } from '../components/hearings/HearingFilters.tsx';
 import { AddParticipantsModal } from '../components/hearings/AddParticipantsModal.tsx';
-import { Button } from '../components/common/Button.tsx';
 import { Modal } from '../components/common/Modal.tsx';
 import { ConfirmDialog } from '../components/common/ConfirmDialog.tsx';
-import { Plus, Scale, CalendarClock, Activity, CheckCircle2, XCircle } from 'lucide-react';
+import { Plus, Scale, CalendarClock, Activity, CheckCircle2, XCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import { useHearings } from '../hooks/useHearings.ts';
 import { Hearing, CreateHearingData, AddParticipantData, Courtroom } from '../services/types.ts';
 import { courtService } from '../services/courtService.ts';
@@ -18,6 +18,7 @@ export const HearingsPage: React.FC = () => {
   const {
     hearings,
     loading,
+    error, // ✅ This is the key - now we'll use it!
     filters,
     setFilters,
     fetchHearings,
@@ -33,23 +34,40 @@ export const HearingsPage: React.FC = () => {
   const [creating, setCreating] = useState(false);
   const [courtrooms, setCourtrooms] = useState<Courtroom[]>([]);
   const [statusCounts, setStatusCounts] = useState({ scheduled: 0, in_progress: 0, completed: 0, cancelled: 0 });
+  const [statsError, setStatsError] = useState(false);
+  const [statsLoading, setStatsLoading] = useState(false);
 
-  const fetchStatusCounts = () =>
-    Promise.all([
-      hearingService.getHearings({ status: 'scheduled' as any }),
-      hearingService.getHearings({ status: 'in_progress' as any }),
-      hearingService.getHearings({ status: 'completed' as any }),
-      hearingService.getHearings({ status: 'cancelled' as any }),
-    ])
-      .then(([s, ip, c, can]) =>
-        setStatusCounts({ scheduled: s.count, in_progress: ip.count, completed: c.count, cancelled: can.count })
-      )
-      .catch(() => {});
+  const fetchStatusCounts = useCallback(async () => {
+    setStatsLoading(true);
+    setStatsError(false);
+    try {
+      const [scheduledRes, inProgressRes, completedRes, cancelledRes] = await Promise.all([
+        hearingService.getHearings({ status: 'scheduled' }),
+        hearingService.getHearings({ status: 'in_progress' }),
+        hearingService.getHearings({ status: 'completed' }),
+        hearingService.getHearings({ status: 'cancelled' }),
+      ]);
+      
+      setStatusCounts({
+        scheduled: scheduledRes.count,
+        in_progress: inProgressRes.count,
+        completed: completedRes.count,
+        cancelled: cancelledRes.count,
+      });
+    } catch (err) {
+      console.error('Failed to fetch stats:', err);
+      setStatsError(true);
+    } finally {
+      setStatsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    courtService.getCourtrooms().then(setCourtrooms).catch(() => {});
+    courtService.getCourtrooms()
+      .then(setCourtrooms)
+      .catch(() => {});
     fetchStatusCounts();
-  }, []);
+  }, [fetchStatusCounts]);
 
   const refreshStats = () => fetchStatusCounts();
 
@@ -82,12 +100,40 @@ export const HearingsPage: React.FC = () => {
     }
   };
 
+  const handleRetry = () => {
+    fetchHearings();
+    refreshStats();
+  };
+
+  // ✅ SHOW ERROR STATE
+  if (error) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-8 h-8 text-red-600" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Failed to Load Hearings</h2>
+          <p className="text-gray-600 mb-6">
+            {error}
+          </p>
+          <button
+            onClick={handleRetry}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const { scheduled, in_progress: inProgress, completed, cancelled } = statusCounts;
 
   return (
     <div className="min-h-screen bg-slate-50">
-
-      {/* ── Hero banner ── */}
+      {/* Hero banner */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 relative overflow-hidden">
         {/* Decorative rings */}
         <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-white/5" />
@@ -123,27 +169,54 @@ export const HearingsPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Stat strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pb-8">
-            {[
-              { label: 'Upcoming', value: scheduled, icon: CalendarClock, color: 'text-blue-300', bg: 'bg-blue-500/10 ring-blue-500/20' },
-              { label: 'In Progress', value: inProgress, icon: Activity, color: 'text-emerald-300', bg: 'bg-emerald-500/10 ring-emerald-500/20' },
-              { label: 'Completed', value: completed, icon: CheckCircle2, color: 'text-slate-300', bg: 'bg-white/5 ring-white/10' },
-              { label: 'Cancelled', value: cancelled, icon: XCircle, color: 'text-rose-300', bg: 'bg-rose-500/10 ring-rose-500/20' },
-            ].map(({ label, value, icon: Icon, color, bg }) => (
-              <div key={label} className={`flex items-center gap-3 rounded-xl px-4 py-3 ring-1 ${bg}`}>
-                <Icon className={`w-5 h-5 shrink-0 ${color}`} />
-                <div>
-                  <p className="text-[11px] font-medium text-slate-400 leading-none mb-1">{label}</p>
-                  <p className="text-2xl font-bold text-white leading-none">{value}</p>
-                </div>
+          {/* Stat strip with loading/error states */}
+          {statsError ? (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-amber-800">
+                <AlertCircle className="w-5 h-5" />
+                <span>Unable to load statistics</span>
               </div>
-            ))}
-          </div>
+              <button
+                onClick={refreshStats}
+                className="text-sm text-amber-800 hover:text-amber-900 underline"
+              >
+                Retry
+              </button>
+            </div>
+          ) : statsLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pb-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex items-center gap-3 rounded-xl px-4 py-3 ring-1 bg-white/5 ring-white/10 animate-pulse">
+                  <div className="w-5 h-5 bg-white/10 rounded" />
+                  <div className="flex-1">
+                    <div className="h-3 bg-white/10 rounded w-16 mb-1" />
+                    <div className="h-6 bg-white/10 rounded w-8" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pb-8">
+              {[
+                { label: 'Upcoming', value: scheduled, icon: CalendarClock, color: 'text-blue-300', bg: 'bg-blue-500/10 ring-blue-500/20' },
+                { label: 'In Progress', value: inProgress, icon: Activity, color: 'text-emerald-300', bg: 'bg-emerald-500/10 ring-emerald-500/20' },
+                { label: 'Completed', value: completed, icon: CheckCircle2, color: 'text-slate-300', bg: 'bg-white/5 ring-white/10' },
+                { label: 'Cancelled', value: cancelled, icon: XCircle, color: 'text-rose-300', bg: 'bg-rose-500/10 ring-rose-500/20' },
+              ].map(({ label, value, icon: Icon, color, bg }) => (
+                <div key={label} className={`flex items-center gap-3 rounded-xl px-4 py-3 ring-1 ${bg}`}>
+                  <Icon className={`w-5 h-5 shrink-0 ${color}`} />
+                  <div>
+                    <p className="text-[11px] font-medium text-slate-400 leading-none mb-1">{label}</p>
+                    <p className="text-2xl font-bold text-white leading-none">{value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ── Content ── */}
+      {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <HearingFilters filters={filters} onFilterChange={setFilters} />
 
