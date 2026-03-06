@@ -43,8 +43,8 @@ urlpatterns = [
     path("health/", health_check, name="health_check"),
     path('admin/', admin.site.urls),
     path("api/v1/hearings/", include("video_hearings.urls")),
-    # path("api/v1/courts/", include("courts.urls")),
-    # path("api/v1/cases/", include("cases.urls")),
+    path("api/v1/courts/", include("courts.urls")),
+    path("api/v1/cases/", include("cases.urls")),
     path("", TemplateView.as_view(template_name="index.html"), name="home"),
     path(
         "swagger/",
