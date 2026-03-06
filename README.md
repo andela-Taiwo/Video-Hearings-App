@@ -464,4 +464,6 @@ These are the core features that are yet to be implemented
 - mail Notification
 - Authentication and Authorization
 - Pagination for the frontend
-
+- CD/CD workflows
+- Monitoring
+- Rate limiting
