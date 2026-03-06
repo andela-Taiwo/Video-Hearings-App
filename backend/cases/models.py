@@ -58,10 +58,10 @@ class CaseParty(models.Model):
 
         # Criminal cases
         DEFENDANT = "defendant", "Defendant"
-        PROSECUTOR = "prosecutor", "Prosecutor" 
+        PROSECUTOR = "prosecutor", "Prosecutor"
 
         # Civil cases
-        CLAIMANT = "claimant", "Claimant" 
+        CLAIMANT = "claimant", "Claimant"
         RESPONDENT = "respondent", "Respondent"
 
         # Legal representatives
@@ -69,12 +69,12 @@ class CaseParty(models.Model):
         PROSECUTION_COUNSEL = (
             "prosecution_counsel",
             "Prosecution Counsel",
-        )  
+        )
         CLAIMANT_COUNSEL = (
             "claimant_counsel",
             "Claimant Counsel",
-        )  
-        SOLICITOR = "solicitor", "Solicitor" 
+        )
+        SOLICITOR = "solicitor", "Solicitor"
 
         # Court officials
         JUDGE = "judge", "Judge"

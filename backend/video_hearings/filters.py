@@ -5,9 +5,7 @@ from .models import Hearing
 class HearingFilter(django_filters.FilterSet):
     """Filter set for Hearing model"""
 
-    name = django_filters.CharFilter(
-        field_name="name", lookup_expr="icontains"
-    )
+    name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
     date_from = django_filters.DateTimeFilter(
         field_name="scheduled_at", lookup_expr="gte"
     )

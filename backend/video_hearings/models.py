@@ -308,4 +308,3 @@ class HearingDocument(models.Model):
 
     def __str__(self):
         return f"{self.doc_type} - {self.hearing.id} - {self.file_name}"
-

@@ -15,7 +15,7 @@ User = get_user_model()
 
 
 # =============================================
-#  DOCUMENT SERIALIZERS 
+#  DOCUMENT SERIALIZERS
 # ===============================================
 class HearingDocumentSerializer(serializers.ModelSerializer):
     uploaded_by_email = serializers.ReadOnlyField(source="uploaded_by.email")
@@ -316,9 +316,7 @@ class AddParticipantsSerializer(serializers.Serializer):
 class CreateHearingSerializer(serializers.Serializer):
     """Serializer for creating a new hearing"""
 
-    case_id = serializers.UUIDField(
-        required=True
-    )
+    case_id = serializers.UUIDField(required=True)
     courtroom_id = serializers.UUIDField(required=True)
     scheduled_at = serializers.DateTimeField(required=True)
     name = serializers.CharField(required=True)

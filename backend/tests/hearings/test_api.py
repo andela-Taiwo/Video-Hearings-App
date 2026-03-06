@@ -16,22 +16,24 @@ from unittest.mock import patch, Mock, MagicMock
 from video_hearings.models import Hearing, HearingParticipant
 # from accounts.models import User
 
+
 @pytest.fixture(autouse=True)
 def mock_redis():
     """Mock Redis connection for all tests"""
-    with patch('redis.Redis') as mock_redis:
+    with patch("redis.Redis") as mock_redis:
         # Create a mock Redis instance
         mock_redis_instance = MagicMock()
         mock_redis.return_value = mock_redis_instance
-        
+
         # Mock common Redis methods
         mock_redis_instance.ping.return_value = True
         mock_redis_instance.get.return_value = None
         mock_redis_instance.set.return_value = True
         mock_redis_instance.delete.return_value = 1
         mock_redis_instance.exists.return_value = 0
-        
+
         yield mock_redis
+
 
 @pytest.mark.django_db
 class TestHearingAPI:

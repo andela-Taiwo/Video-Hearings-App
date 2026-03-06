@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
@@ -36,12 +37,14 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
+
 def health_check(request):
     return JsonResponse({"status": "healthy"})
 
+
 urlpatterns = [
     path("health/", health_check, name="health_check"),
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("api/v1/hearings/", include("video_hearings.urls")),
     path("api/v1/courts/", include("courts.urls")),
     path("api/v1/cases/", include("cases.urls")),
