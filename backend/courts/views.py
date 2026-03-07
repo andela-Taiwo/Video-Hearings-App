@@ -5,6 +5,6 @@ from .serializers import CourtroomSerializer
 
 
 class CourtroomViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Courtroom.objects.all()
+    queryset = Courtroom.objects.all().order_by("name", "id")
     serializer_class = CourtroomSerializer
     permission_classes = [AllowAny]

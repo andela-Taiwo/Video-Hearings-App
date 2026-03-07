@@ -309,8 +309,7 @@ uv pip install -r requirements.txt
 
 Create a `.env` file in the root directory:
 
-```env
-bash
+```bash
 # Database Configuration
 DATABASE_URL="datbase url"
 PROD_SECRET_KEY=""
@@ -374,7 +373,7 @@ Test SuperAdmin:
 
 ### Local  Backend Setup
 
-```
+```bash
 # Navigate to backend directory
 cd backend
 
@@ -405,11 +404,14 @@ python manage.py createsuperuser
 
 # Run development server
 python manage.py runserver
+
+# Run tests
+tox
 ```
 
 
 ### Local Frontend Setup
-```
+```bash
 # Navigate to frontend directory
 cd frontend
 

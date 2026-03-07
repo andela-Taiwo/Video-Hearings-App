@@ -1,6 +1,8 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination, CursorPagination
+from collections import OrderedDict
 from .base import BaseHearingViewSet
 from ..serializers import (
     AddParticipantsSerializer,
@@ -16,6 +18,31 @@ from ..filters import HearingFilter
 from ..models import Hearing
 
 
+class HearingPagination(PageNumberPagination):
+    """Custom pagination for hearings"""
+
+    page_size = 20
+    page_size_query_param = "page_size"
+    max_page_size = 100
+    page_query_param = "page"
+
+    def get_paginated_response(self, data):
+        """Customize paginated response with additional metadata"""
+        return Response(
+            OrderedDict(
+                [
+                    ("page", self.page.number),
+                    ("total_pages", self.page.paginator.num_pages),
+                    ("page_size", self.page.paginator.per_page),
+                    ("count", self.page.paginator.count),
+                    ("next", self.get_next_link()),
+                    ("previous", self.get_previous_link()),
+                    ("results", data),
+                ]
+            )
+        )
+
+
 class HearingViewSet(BaseHearingViewSet):
     """
     ViewSet for managing hearings
@@ -27,6 +54,7 @@ class HearingViewSet(BaseHearingViewSet):
     service_class = HearingService
     permission_classes = []
     search_fields = ["name"]
+    pagination_class = HearingPagination
 
     # serializer to use for each action
     serializer_classes = {
@@ -74,6 +102,24 @@ class HearingViewSet(BaseHearingViewSet):
             return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return self.handle_service_error(e)
+
+    def list(self, request, *args, **kwargs):
+        """
+        List hearings with pagination, filtering, and searching
+
+        GET /api/hearings/?page=1&page_size=20&search=term&case=123
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Apply pagination
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         """
@@ -125,8 +171,6 @@ class HearingViewSet(BaseHearingViewSet):
         except Exception as e:
             return self.handle_service_error(e)
 
-    # Custom actions for additional functionality
-
     @action(detail=True, methods=["post"])
     def add_participants(self, request, pk=None):
         """
@@ -176,7 +220,6 @@ class HearingViewSet(BaseHearingViewSet):
         validated_data = serializer.validated_data
 
         try:
-            # Use the service to remove participants
             result = self.service.remove_participants(
                 hearing_id=hearing.id,
                 participant_ids=validated_data.get("participant_ids"),
