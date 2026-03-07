@@ -369,7 +369,7 @@ Test SuperAdmin:
 | `Frontend` | http://localhost:3000 | `React App` |
 | `Backend API` | http://localhost:8000/api/v1| `Dhjando Rest API` |
 | `Admin Panel` | http://localhost:8000/admin| `Django Admin` |
-| `API Docs` | http://localhost:8000/api/docs | `Swagger/OpenAPI Docs` |
+| `API Docs` | http://localhost:8000/swagger | `Swagger/OpenAPI Docs` |
 
 ### Local  Backend Setup
 
